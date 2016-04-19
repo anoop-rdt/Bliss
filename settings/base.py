@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     'authtools',
 
     'apps.accounts',
-    'apps.registration'
-]
+    'apps.ble'
+]   
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
