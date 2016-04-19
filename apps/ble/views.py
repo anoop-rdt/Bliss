@@ -15,4 +15,3 @@ class BLEDeviceViewSet(viewsets.ModelViewSet):
     """
     serializer_class = BLEDeviceSerializer
     queryset = BLEDevice.objects.all()
-    permission_classes = (IsAuthenticated,)
