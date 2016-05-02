@@ -1,0 +1,30 @@
+{% extends "ble/base.html" %}
+{% load staticfiles %}
+{% block header %}
+{% endblock %}
+{% block container %}
+
+<div class="container">
+  <h3>Shipments</h3>
+  <table class="table table-condensed">
+    <thead>
+      <tr>
+        <th>Shipment</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+	{% for gateway in object_list %}
+	      <tr>
+	        <td>{{ gateway.title }}</td>
+          <td><a href="{% url 'gateway-map' gateway.id%}" class="btn btn-info" role="button">Route Map</a></td>
+	        <td><a href="{% url 'gateway-detail' gateway.id%}" class="btn btn-info" role="button">Infographics</a></td>
+	      </tr>
+	{% empty %}
+	    <td>No gateways added yet.</td>
+	{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
