@@ -8,9 +8,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'HOST': 'localhost',
         'PORT': '5432',
-        'NAME': 'rdt_base',
+        'NAME': 'bledb',
         'USER': 'postgres',
-        'PASSWORD': 'abcd1234',
+        'PASSWORD': 'password',
         'OPTIONS': {
             # "autocommit": True,
         },
