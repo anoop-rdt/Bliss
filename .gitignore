@@ -2,7 +2,6 @@
 node_modules
 .idea
 settings/development.py
-static/bower_components/
 staticfiles
 staticfiles/
 *.pyc
