@@ -61,6 +61,8 @@
 		      ykeys: ['temperature1', 'temperature2'],
               ymin:15,
               ymax:40,
+              goals:[35, 20],
+              goalLineColors:['red', 'green'],
 		      labels: ['Tag1', 'Tag2'],
 		      fillOpacity: 0.6,
 		      hideHover: 'auto',
@@ -68,7 +70,7 @@
 		      resize: true,
 		      pointFillColors:['#ffffff'],
 		      pointStrokeColors: ['black'],
-		      lineColors:['gray','red']
+		      lineColors:['blue',]
 		  };
 		config.element = 'temp-line-chart';
 		Morris.Line(config);
