@@ -1,4 +1,4 @@
-<!-- {% extends "ble/base.html" %} -->
+<!-- {% extends "ble/home.html" %} -->
 {% load staticfiles %}
 {% block header %}
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -6,12 +6,37 @@
     <title>{{gateway}}</title>
     <style>
       #map {
-        height: 100%;
+        padding-top: 20px;
+      }
+      .col-container {
+        padding: 50px 40px;
       }
     </style>
 {% endblock %}
 {% block container %}
-    <div id="map"></div>
+<div class="row">
+  <div class="col-md-8">
+    <div class="col-container">
+      <div id="map" style="height:550px;width:550px;"></div>
+    </div>
+  </div>
+  <div class="col-md-4 col-container">
+      <div class="panel panel-default">
+          <div class="panel-heading">
+              <i class="fa fa-bluetooth-b" aria-hidden="true"></i> Tags
+          </div>
+          <!-- /.panel-heading -->
+          <div class="panel-body">
+              <div class="list-group">
+                {% for device in gateway.devices.all %}
+                  <a href="#" class="list-group-item">{{device.name}}</a>
+                {% endfor %}
+              </div>
+          </div>
+          <!-- /.panel-body -->
+      </div>
+  </div>
+</div>
 {% endblock %}
 {% block scripts %}
      <script>
@@ -20,9 +45,9 @@
         var directionsDisplay = new google.maps.DirectionsRenderer;
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 7,
-          center: {lat: 11.6643, lng: 78.1460}
+          center: {lat: {{gateway.current_lat}}, lng: {{gateway.current_long}}}
         });
-        var myLatLng = {lat: 11.6643, lng: 78.1460};
+        var myLatLng = {lat: {{gateway.current_lat}}, lng: {{gateway.current_long}}};
 		  var marker = new google.maps.Marker({
 		    position: myLatLng,
 		    map: map,
@@ -34,8 +59,8 @@
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
         directionsService.route({
-          origin: {lat: 9.9312, lng: 76.2673},
-          destination: {lat: 12.9716, lng: 77.5946},
+          origin: {lat: {{gateway.source_lat}}, lng: {{gateway.source_long}}},
+          destination: {lat: {{gateway.destination_lat}}, lng: {{gateway.destination_long}}},
           travelMode: google.maps.TravelMode.DRIVING
         }, function(response, status) {
           if (status === google.maps.DirectionsStatus.OK) {

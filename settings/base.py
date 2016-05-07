@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'authtools',
 
-    'apps.accounts',
+    'apps.account',
+    'apps.utils',
     'apps.ble',
 ]   
 
@@ -83,7 +84,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'wsgi.application'
 
-
+APP_NAME = "BLE Shipment Tracker"
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
@@ -116,6 +117,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_URL = '/login'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
@@ -126,4 +128,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'account.User'

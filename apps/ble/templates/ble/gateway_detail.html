@@ -1,4 +1,4 @@
-{% extends "ble/base.html" %}
+{% extends "ble/home.html" %}
 {% load staticfiles %}
 {% block header %}
 <link href="{% static 'bower_components/morrisjs/morris.css' %}" rel="stylesheet">
@@ -8,7 +8,7 @@
 {% block container %}
 	<h1>{{ gateway.title }}</h1>
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-bar-chart-o fa-fw"></i> Temperature Chart
@@ -16,21 +16,6 @@
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     <div id="temp-line-chart" style="height: 250px;"></div>
-                </div>
-                <!-- /.panel-body -->
-    
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bar-chart-o fa-fw"></i> Humidity Chart
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    <div id="humid-line-chart" style="height: 250px;"></div>
                 </div>
                 <!-- /.panel-body -->
     
@@ -74,8 +59,6 @@
 		  };
 		config.element = 'temp-line-chart';
 		Morris.Line(config);
-        config.element = 'humid-line-chart';
-        Morris.Line(config);
 	});
 </script>
 {% endblock scripts %}

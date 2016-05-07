@@ -1,9 +1,24 @@
-{% extends "ble/base.html" %}
+{% extends "ble/home.html" %}
 {% load staticfiles %}
 {% block header %}
+<link href="{% static 'dist/css/gw-list.css' %}" rel="stylesheet">
+{% endblock %}
+{% block search %}
+  <li class="sidebar-search">
+      <div class="input-group custom-search-form">
+        <form method="GET" action="{% url 'gateways' %}">
+          <input type="text" class="form-control search-box-width" name="name" placeholder="Search">
+          <span class="input-group-btn">
+          <button class="btn btn-default" type="submit">
+              <i class="fa fa-search"></i>
+          </button>
+        </form>
+      </span>
+      </div>
+      <!-- /input-group -->
+  </li>
 {% endblock %}
 {% block container %}
-
 <div class="container">
   <h3>Shipments</h3>
   <table class="table table-condensed">
@@ -22,7 +37,7 @@
 	        <td><a href="{% url 'gateway-detail' gateway.id%}" class="btn btn-info" role="button">Infographics</a></td>
 	      </tr>
 	{% empty %}
-	    <td>No gateways added yet.</td>
+	    <td>No gateways.</td>
 	{% endfor %}
     </tbody>
   </table>
