@@ -54,7 +54,6 @@ class BLEDevice(AbstractTimestampModel,AbstractConditionsModel):
 
 
 class BLEData(AbstractTimestampModel):
-    title = models.CharField(max_length=256)
     temperature = models.FloatField()
     device = models.ForeignKey(BLEDevice,related_name='data')
 
