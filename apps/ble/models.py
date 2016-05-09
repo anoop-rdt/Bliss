@@ -48,7 +48,7 @@ class BLEDevice(AbstractTimestampModel,AbstractConditionsModel):
     name = models.CharField(max_length=256)
     ble_device_id = models.CharField(max_length=256, primary_key=True)
     gateway = models.ForeignKey(Gateway,related_name='devices')
-    current_temp = models.DecimalField(max_digits=8, decimal_places=3)
+    current_temp = models.DecimalField(max_digits=8, decimal_places=3,null=True, blank=True)
     
     def __unicode__(self):
         return str(self.name)
