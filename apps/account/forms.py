@@ -55,8 +55,13 @@ class LoginForm(AbstractFrom):
 
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = 'form-group'
         self.fields['email'].widget.attrs['class'] = 'form-control'
         self.fields['password'].widget.attrs['class'] = 'form-control'
+        self.helper.add_input(
+            Submit('submit', 'Log Me In', css_class='btn btn-default login-padding-top',)
+        )
 
     def authenticate(self, request):
         self.context['request'] = request
