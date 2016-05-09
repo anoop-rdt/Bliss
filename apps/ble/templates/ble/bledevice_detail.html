@@ -33,7 +33,7 @@
               <div class="panel-body">
                   <div class="list-group">
                     {% for each_device in device.gateway.devices.all %}
-                      <a href="{% url 'device' each_device.ble_device_id %}" class="list-group-item list-group-item list-group-item-{{each_device.temp_status}}">{{each_device.name}}         {{each_device.current_temp|default_if_none:--}}&#8451</a>
+                      <a href="{% url 'device' each_device.ble_device_id %}" class="list-group-item list-group-item list-group-item-{{each_device.temp_status}}">{{each_device.name}}         {{each_device.current_temp|default_if_none:'--'}}&#8451</a>
                     {% empty %}
                         <td>No devices attached.</td>
                     {% endfor %}
