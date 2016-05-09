@@ -28,7 +28,7 @@ router.register('gateway', GatewaySerializerViewSet, base_name='gateway')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('apps.account.urls', namespace="accounts")),
+    url(r'', include('apps.account.urls', namespace="accounts")),
     url(r'^$', login_required(GatewayListView.as_view()), name='home'),
     url(r'^gateway-route/(?P<pk>[\w._-]+)/$', 'apps.ble.views.route_map', name='gateway'),
     url(r'^device-detail/(?P<pk>[-\w._-]+)', login_required(DeviceDetailView.as_view()), name='device'),
