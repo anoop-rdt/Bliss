@@ -23,13 +23,15 @@
   <div class="col-md-4 col-container">
       <div class="panel panel-default">
           <div class="panel-heading">
-              <i class="fa fa-bluetooth-b" aria-hidden="true"></i> Tags
+              <i class="fa fa-bluetooth-b" aria-hidden="true"></i> Devices
           </div>
           <!-- /.panel-heading -->
           <div class="panel-body">
               <div class="list-group">
                 {% for device in gateway.devices.all %}
-                  <a href="#" class="list-group-item">{{device.name}}</a>
+                  <a href="{% url 'device' device.pk %}" class="list-group-item list-group-item-{{device.temp_status}}">{{device.name}}           {{device.current_temp}}&#8451</a>
+                {% empty %}
+                    <td>No devices attached.</td>
                 {% endfor %}
               </div>
           </div>
@@ -66,7 +68,7 @@
           if (status === google.maps.DirectionsStatus.OK) {
             directionsDisplay.setDirections(response);
           } else {
-            window.alert('Directions request failed due to ' + status);
+            window.alert('Please enter a valid location');
           }
         });
       }

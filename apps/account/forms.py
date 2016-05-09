@@ -53,6 +53,11 @@ class LoginForm(AbstractFrom):
     error = 'Invalid email and/or password'
     button_name = 'Login'
 
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+        self.fields['email'].widget.attrs['class'] = 'form-control'
+        self.fields['password'].widget.attrs['class'] = 'form-control'
+
     def authenticate(self, request):
         self.context['request'] = request
         if self.is_valid():

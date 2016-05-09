@@ -6,7 +6,7 @@
 <script src="{% static 'bower_components/morrisjs/morris.min.js' %}"></script>
 {% endblock %}
 {% block container %}
-	<h1>{{ gateway.title }}</h1>
+	<h1>{{ device.name }}</h1>
     <div class="row">
         <div class="col-md-8">
             <div class="panel panel-default">
@@ -15,40 +15,48 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+                  {% if  data|length > 2 %}
                     <div id="temp-line-chart" style="height: 250px;"></div>
+                  {% else %}
+                    No data for this device.
+                  {% endif %}
                 </div>
                 <!-- /.panel-body -->
-    
             </div>
+        </div>
+        <div class="col-md-4 col-container">
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <i class="fa fa-bluetooth-b" aria-hidden="true"></i> {{device.gateway}} Related Devices
+              </div>
+              <!-- /.panel-heading -->
+              <div class="panel-body">
+                  <div class="list-group">
+                    {% for each_device in device.gateway.devices.all %}
+                      <a href="{% url 'device' each_device.ble_device_id %}" class="list-group-item list-group-item list-group-item-{{each_device.temp_status}}">{{each_device.name}}         {{each_device.current_temp}}&#8451</a>
+                    {% empty %}
+                        <td>No devices attached.</td>
+                    {% endfor %}
+                  </div>
+              </div>
+              <!-- /.panel-body -->
+          </div>
         </div>
     </div>
 {% endblock %}
 
 {% block scripts %}
 <script type="text/javascript">
+{% if  data|length > 2 %}
+  var data = {{data|safe}};
 	$(function () {
-		var data = [
-		      { y: '2012-02-24 09:00', temperature1: 24,  temperature2: 22},
-		      { y: '2012-02-24 10:00', temperature1: 25,  temperature2: 23},
-		      { y: '2012-02-24 11:00', temperature1: 26,  temperature2: 24},
-		      { y: '2012-02-24 12:00', temperature1: 27,  temperature2: 25},
-		      { y: '2012-02-24 13:00', temperature1: 28,  temperature2: 26},
-		      { y: '2012-02-24 14:00', temperature1: 29,  temperature2: 27},
-		      { y: '2012-02-24 15:00', temperature1: 30, temperature2: 28},
-		      { y: '2012-02-24 16:00', temperature1: 31, temperature2: 29},
-		      { y: '2012-02-24 17:00', temperature1: 32, temperature2: 30},
-		      { y: '2012-02-24 18:00', temperature1: 33, temperature2: 31},
-		      { y: '2012-02-24 19:00', temperature1: 34, temperature2: 32}
-		    ],
 		    config = {
 		      data: data,
 		      xkey: 'y',
-		      ykeys: ['temperature1', 'temperature2'],
-              ymin:15,
-              ymax:40,
-              goals:[35, 20],
+		      ykeys: ['temperature'],
+              goals:['{{ device.max_temp }}','{{ device.min_temp }}'],
               goalLineColors:['red', 'green'],
-		      labels: ['Tag1', 'Tag2'],
+		      labels: ['{{device.name}}'],
 		      fillOpacity: 0.6,
 		      hideHover: 'auto',
 		      behaveLikeLine: true,
@@ -60,5 +68,6 @@
 		config.element = 'temp-line-chart';
 		Morris.Line(config);
 	});
+{% endif %}
 </script>
 {% endblock scripts %}

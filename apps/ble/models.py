@@ -49,13 +49,29 @@ class BLEDevice(AbstractTimestampModel,AbstractConditionsModel):
     ble_device_id = models.CharField(max_length=256, primary_key=True)
     gateway = models.ForeignKey(Gateway,related_name='devices')
     current_temp = models.DecimalField(max_digits=8, decimal_places=3)
+    
     def __unicode__(self):
         return str(self.name)
 
+    @property
+    def temp_status(self):
+        max_temp_diff = self.max_temp - self.current_temp
+        min_temp_diff = self.current_temp - self.min_temp
+        if (self.current_temp >= self.max_temp) or (self.current_temp <= self.min_temp):
+            return "danger"
+        elif (max_temp_diff ==5) or (min_temp_diff == 5):
+            return "warning"
+        else:
+            return "success"
 
 class BLEData(AbstractTimestampModel):
     temperature = models.FloatField()
     device = models.ForeignKey(BLEDevice,related_name='data')
 
     def __unicode__(self):
-        return str(self.title)
+        return str(self.device.name)
+
+    def save(self, *args, **kwargs):
+        self.device.current_temp = self.temperature
+        self.device.save()
+        super(BLEData, self).save(*args, **kwargs)

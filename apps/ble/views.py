@@ -35,7 +35,7 @@ class BLEDataViewSet(viewsets.ModelViewSet):
 
 class GatewaySerializerViewSet(viewsets.ModelViewSet):
     """
-    API viewset for listing devices in prefered Category.
+    API viewset for ble devices.
     """
     serializer_class = GatewaySerializer
     queryset = Gateway.objects.all()
@@ -57,10 +57,23 @@ class GatewayListView(ListView):
         return object_list
 
 
-class GatewayDetailView(DetailView):
-    model = Gateway
+class DeviceDetailView(DetailView):
+    model = BLEDevice
+
+    def get_context_data(self, **kwargs):
+        context = kwargs
+        data = []
+        context['device'] = self.object
+        for each_data in self.object.data.all():
+            temp_data = {}
+            temp_data['y'] = each_data.created_on.strftime("%Y-%m-%d %H:%M:%S")
+            temp_data['temperature'] = each_data.temperature
+            data.append(temp_data)
+        context['data'] = json.dumps(data)
+        return context
 
 
+@login_required
 def route_map(request, pk):
     gateway = Gateway.objects.get(id=pk)
     return render(request, 'ble/route_map.html', {'gateway':gateway})

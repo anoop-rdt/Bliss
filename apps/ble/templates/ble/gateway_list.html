@@ -6,7 +6,7 @@
 {% block search %}
   <li class="sidebar-search">
       <div class="input-group custom-search-form">
-        <form method="GET" action="{% url 'gateways' %}">
+        <form method="GET" action="{% url 'home' %}">
           <input type="text" class="form-control search-box-width" name="name" placeholder="Search">
           <span class="input-group-btn">
           <button class="btn btn-default" type="submit">
@@ -24,8 +24,9 @@
   <table class="table table-condensed">
     <thead>
       <tr>
-        <th>Shipment</th>
-        <th></th>
+        <th>Title</th>
+        <th>Number of tags</th>
+        <th>Registered on</th>
         <th></th>
       </tr>
     </thead>
@@ -33,8 +34,9 @@
 	{% for gateway in object_list %}
 	      <tr>
 	        <td>{{ gateway.title }}</td>
-          <td><a href="{% url 'gateway-map' gateway.id%}" class="btn btn-info" role="button">Route Map</a></td>
-	        <td><a href="{% url 'gateway-detail' gateway.id%}" class="btn btn-info" role="button">Infographics</a></td>
+          <td>{{ gateway.devices.count }}</td>
+          <td>{{ gateway.created_on }}</td>
+          <td><a href="{% url 'gateway' gateway.id%}" class="btn btn-info" role="button">Route Map</a></td>
 	      </tr>
 	{% empty %}
 	    <td>No gateways.</td>
