@@ -1,80 +1,80 @@
-<!-- {% extends "ble/home.html" %} -->
-{% load staticfiles %}
-{% block header %}
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <title>{{gateway}}</title>
-    <style>
-      #map {
-        padding-top: 20px;
-      }
-      .col-container {
-        padding: 50px 40px;
-      }
-    </style>
-{% endblock %}
-{% block container %}
-<h1>{{ gateway.title }}</h1>
-<div class="row">
-  <div class="col-md-8">
-    <div class="col-container">
-      <div id="map" style="height:550px;width:550px;"></div>
+  <!-- {% extends "ble/home.html" %} -->
+  {% load staticfiles %}
+  {% block header %}
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <title>{{gateway}}</title>
+  <style>
+    #map {
+      padding-top: 20px;
+    }
+    .col-container {
+      padding: 50px 40px;
+    }
+  </style>
+  {% endblock %}
+  {% block container %}
+  <div class="row">
+    <h1>{{ gateway.title }}</h1>
+    <div class="col-md-8">
+      <div class="col-container">
+        <div id="map" style="height:550px;width:550px;"></div>
+      </div>
+    </div>
+    <div class="container col-md-4">
+      <h3> Related Devices</h3>
+      <div class="panel panel-default">
+        <div class="panel-body" style="text-align:center;">
+          <div class="row">
+            {% for device in gateway.devices.all %}
+            <div class="col-md-4">
+              <a href="{% url 'device' device.ble_device_id %}" class="btn btn-primary btn-{{device.temp_status}}" role="button">{{device.name}}
+              <br>
+              {{device.current_temp|default_if_none:'--'}}&#8451</a>
+            </div>
+            {% empty %}
+            <div>No devices attached.</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="col-md-4 col-container">
-      <div class="panel panel-default">
-          <div class="panel-heading">
-              <i class="fa fa-bluetooth-b" aria-hidden="true"></i>Related Devices
-          </div>
-          <!-- /.panel-heading -->
-          <div class="panel-body">
-              <div class="list-group">
-                {% for device in gateway.devices.all %}
-                  <a href="{% url 'device' device.pk %}" class="list-group-item list-group-item-{{device.temp_status}}">{{device.name}}           {{device.current_temp|default_if_none:'--'}}&#8451</a>
-                {% empty %}
-                    <td>No devices attached.</td>
-                {% endfor %}
-              </div>
-          </div>
-          <!-- /.panel-body -->
-      </div>
-  </div>
-</div>
-{% endblock %}
-{% block scripts %}
-     <script>
-      function initMap() {
-        var directionsService = new google.maps.DirectionsService;
-        var directionsDisplay = new google.maps.DirectionsRenderer;
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 7,
-          center: {lat: {{gateway.current_lat}}, lng: {{gateway.current_long}}}
-        });
-        var myLatLng = {lat: {{gateway.current_lat}}, lng: {{gateway.current_long}}};
-		  var marker = new google.maps.Marker({
-		    position: myLatLng,
-		    map: map,
-		    title: 'Hello World!'
-		  });
-        directionsDisplay.setMap(map);
-        calculateAndDisplayRoute(directionsService, directionsDisplay);
-      }
+  {% endblock %}
+  {% block scripts %}
+  <script>
+    function initMap() {
+      var directionsService = new google.maps.DirectionsService;
+      var directionsDisplay = new google.maps.DirectionsRenderer;
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 7,
+        center: {lat: {{gateway.current_lat}}, lng: {{gateway.current_long}}}
+      });
+      var myLatLng = {lat: {{gateway.current_lat}}, lng: {{gateway.current_long}}};
+      var marker = new google.maps.Marker({
+        position: myLatLng,
+        map: map,
+        title: 'Hello World!'
+      });
+      directionsDisplay.setMap(map);
+      calculateAndDisplayRoute(directionsService, directionsDisplay);
+    }
 
-      function calculateAndDisplayRoute(directionsService, directionsDisplay) {
-        directionsService.route({
-          origin: {lat: {{gateway.source_lat}}, lng: {{gateway.source_long}}},
-          destination: {lat: {{gateway.destination_lat}}, lng: {{gateway.destination_long}}},
-          travelMode: google.maps.TravelMode.DRIVING
-        }, function(response, status) {
-          if (status === google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(response);
-          } else {
-            window.alert('Please enter a valid location');
-          }
-        });
-      }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBa5qh541jECPGkwi_lJORTrgh83CIr2Xo&callback=initMap">
-    </script>
+    function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+      directionsService.route({
+        origin: {lat: {{gateway.source_lat}}, lng: {{gateway.source_long}}},
+        destination: {lat: {{gateway.destination_lat}}, lng: {{gateway.destination_long}}},
+        travelMode: google.maps.TravelMode.DRIVING
+      }, function(response, status) {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Please enter a valid location');
+        }
+      });
+    }
+  </script>
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBa5qh541jECPGkwi_lJORTrgh83CIr2Xo&callback=initMap">
+</script>
 {% endblock scripts %}
