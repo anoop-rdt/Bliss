@@ -27,13 +27,21 @@
         <div class="panel-body" style="text-align:center;">
           <div class="row">
             {% for device in gateway.devices.all %}
-            <div class="col-md-4">
-              <a href="{% url 'device' device.ble_device_id %}" class="btn btn-primary btn-{{device.temp_status}}" role="button">{{device.name}}
+                <div class="col-md-4">
+                  <a href="{% url 'device' device.ble_device_id %}" class="btn btn-primary btn-{{device.temp_status}}" role="button">{{device.name}}
               <br>
-              {{device.current_temp|default_if_none:'--'}}&#8451</a>
+              {% with current_temp=device.current_temp|default_if_none:'--' %}
+                {{current_temp|floatformat:2}}
+              {% endwith %}
+              &#8451</a>
+                </div>
+                {% if forloop.counter|divisibleby:3 %}
             </div>
-            {% empty %}
-            <div>No devices attached.</div>
+            <br>
+            <div class="row">
+                {% endif %}
+                {% empty %}
+              No devices attached.
             {% endfor %}
           </div>
         </div>
