@@ -3,8 +3,8 @@ from django.utils import timezone
 
 
 class AbstractTimestampModel(models.Model):
-    created_on = models.DateField(auto_now_add=True, editable=False)
-    modified_on = models.DateField(auto_now=True, editable=False)
+    created_on = models.DateTimeField(auto_now_add=True, editable=True)
+    modified_on = models.DateTimeField(auto_now=True, editable=True)
 
     class Meta:
         abstract = True
