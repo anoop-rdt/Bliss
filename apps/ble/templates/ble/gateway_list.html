@@ -19,7 +19,7 @@
   </li>
 {% endblock %}
 {% block container %}
-<div class="container">
+<div class="container custom-container-width">
   <h3>Shipments</h3>
   <table class="table table-condensed">
     <thead>
@@ -35,7 +35,7 @@
 	      <tr>
 	        <td>{{ gateway.title }}</td>
           <td>{{ gateway.devices.count }}</td>
-          <td>{{ gateway.created_on }}</td>
+          <td>{{ gateway.created_on|date:"M d, Y" }}</td>
           <td><a href="{% url 'gateway' gateway.id%}" class="btn btn-primary btn-xs" role="button">Route Map</a></td>
 	      </tr>
 	{% empty %}
