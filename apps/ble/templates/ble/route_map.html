@@ -30,9 +30,11 @@
                 <div class="col-md-4">
                   <a href="{% url 'device' device.ble_device_id %}" class="btn btn-primary btn-{{device.temp_status}}" role="button">{{device.name}}
               <br>
-              {% with current_temp=device.current_temp|default_if_none:'--' %}
-                {{current_temp|floatformat:2}}
-              {% endwith %}
+              {% if device.current_temp %}
+                {{device.current_temp|floatformat:2}}
+              {% else %}
+                --
+              {% endif %}
               &#8451</a>
                 </div>
                 {% if forloop.counter|divisibleby:3 %}

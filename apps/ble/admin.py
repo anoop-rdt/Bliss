@@ -10,8 +10,14 @@ class BLEDataAdmin(admin.ModelAdmin):
     model = BLEData
 
 
+class BLEDeviceInlineAdmin (admin.TabularInline):
+    model = BLEDevice
+
+
 class GatewayAdmin(admin.ModelAdmin):
     model = Gateway
+    inlines = [BLEDeviceInlineAdmin]
+
 
 
 admin.site.register(BLEDevice, BLEDeviceAdmin)
