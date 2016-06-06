@@ -1,0 +1,56 @@
+{% extends "ble/home.html" %}
+{% load staticfiles %}
+{% load filtertags %}
+{% block header %}
+<link href="{% static 'dist/css/gw-list.css' %}" rel="stylesheet">
+{% endblock %}
+{% block container %}
+<h2>{{object.title}}</h2>
+<br>
+<div class="row">
+  <div class="col-md-7">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          {% for room_env in room_envs %}
+              <div class="col-md-4 pad-10-tp">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">{{room_env.temp_status}}</h1>
+                    </div>
+                    <div class="panel-body">
+                      {% for device in room_env.devices.all|in_room:object %}
+                       <div class="col-md-4 pad-10-tp">
+                        <a href="{% url 'device' device.ble_device_id %}"<button type="button" class="btn btn-{{device.temp_status}} btn-circle btn-xl"><small>{{device.current_temp|floatformat:1}}&#8451</small></button></a>
+                       </div>
+                      {% endfor %}
+                    </div>
+                </div>
+
+
+                <!-- {% for status_count in gateway.status_wise_tags %}
+                  <br>
+                   {{status_count.ble_device_id__count}}  {{status_count.environment__temp_status}}
+                {% endfor %} -->
+                </a>
+              </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div style="text-align:center;"> Warning: {{warning_tags_count}} </div>
+        </div>
+        <div class="row">
+          <div style="text-align:center;">{{object.devices.count}} Tags</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
