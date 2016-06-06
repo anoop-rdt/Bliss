@@ -8,8 +8,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'HOST': 'localhost',
         'PORT': '5432',
-        'NAME': 'bledb',
-        'USER': 'postgres',
+        'NAME': 'bliss',
+        'USER': 'cwb',
         'PASSWORD': 'password',
         'OPTIONS': {
             # "autocommit": True,

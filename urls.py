@@ -17,7 +17,7 @@ from django.conf.urls import url, include, patterns
 from django.conf import settings
 from django.contrib import admin
 from rest_framework_nested import routers
-from apps.ble.views import BLEDeviceViewSet, BLEDataViewSet, GatewaySerializerViewSet, GatewayListView, DeviceDetailView
+from apps.ble.views import BLEDeviceViewSet, BLEDataViewSet, GatewaySerializerViewSet, GatewayListView, DeviceDetailView, GatewayDetailView
 from django.contrib.auth.decorators import login_required
 
 
@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^$', login_required(GatewayListView.as_view()), name='home'),
     url(r'^gateway-route/(?P<pk>[\w._-]+)/$', 'apps.ble.views.route_map', name='gateway'),
     url(r'^device-detail/(?P<pk>[-\w._-]+)', login_required(DeviceDetailView.as_view()), name='device'),
+    url(r'^room-detail/(?P<pk>[-\w._-]+)', login_required(GatewayDetailView.as_view()), name='room-detail'),
     url(r'api/', include(router.urls)),
 ]
 

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import list_route
 
-from .models import BLEDevice, BLEData, Gateway
+from .models import BLEDevice, BLEData, Gateway, RoomEnvironment
 from .serializers import BLEDeviceSerializer, BLEDataSerializer, GatewaySerializer
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.db.models import Count
 
 
 class BLEDeviceViewSet(viewsets.ModelViewSet):
@@ -45,17 +46,29 @@ class GatewaySerializerViewSet(viewsets.ModelViewSet):
 class GatewayListView(ListView):
     model = Gateway
 
-    def get_queryset(self):
-        try:
-            name = self.request.GET['name']
-        except:
-            name = ''
-        if (name != ''):
-            object_list = self.model.objects.filter(title__icontains = name)
-        else:
-            object_list = self.model.objects.all()
-        return object_list
+    def get_context_data(self, **kwargs):
+        context = super(GatewayListView, self).get_context_data(**kwargs)
+        total_tags = 0
+        warning_tags_count  = len([device for device in BLEDevice.objects.all() if device.temp_status=='warning'])
+        for gateway in self.object_list:
+            gateway.status_wise_tags = gateway.devices.values('environment__temp_status').annotate(Count("ble_device_id"))
+            total_tags += gateway.devices.count()
+        context['total_tags'] = total_tags
+        context['warning_tags_count'] = warning_tags_count
+        return context
 
+class GatewayDetailView(DetailView):
+    model = Gateway
+
+    def get_context_data(self, **kwargs):
+        for each in self.object.devices.all():
+            print each.temp_status
+        context = super(GatewayDetailView, self).get_context_data(**kwargs)
+        warning_tags_count  = len([device for device in self.object.devices.all() if device.temp_status=='warning'])
+        room_envs = RoomEnvironment.objects.all()
+        context['room_envs'] = room_envs
+        context['warning_tags_count'] = warning_tags_count
+        return context
 
 class DeviceDetailView(DetailView):
     model = BLEDevice

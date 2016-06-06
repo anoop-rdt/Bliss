@@ -3,45 +3,41 @@
 {% block header %}
 <link href="{% static 'dist/css/gw-list.css' %}" rel="stylesheet">
 {% endblock %}
-{% block search %}
-  <li class="sidebar-search">
-      <div class="input-group custom-search-form">
-        <form method="GET" action="{% url 'home' %}">
-          <input type="text" class="form-control search-box-width" name="name" placeholder="Search">
-          <span class="input-group-btn">
-          <button class="btn btn-default" type="submit">
-              <i class="fa fa-search"></i>
-          </button>
-        </form>
-      </span>
-      </div>
-      <!-- /input-group -->
-  </li>
-{% endblock %}
 {% block container %}
-<div class="container custom-container-width">
-  <h3>Shipments</h3>
-  <table class="table table-condensed">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Number of tags</th>
-        <th>Registered on</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-	{% for gateway in object_list %}
-	      <tr>
-	        <td>{{ gateway.title }}</td>
-          <td>{{ gateway.devices.count }}</td>
-          <td>{{ gateway.created_on|date:"M d, Y" }}</td>
-          <td><a href="{% url 'gateway' gateway.id%}" class="btn btn-primary btn-xs" role="button">Route Map</a></td>
-	      </tr>
-	{% empty %}
-	    <td>No gateways.</td>
-	{% endfor %}
-    </tbody>
-  </table>
+<br>
+<div class="row">
+  <div class="col-md-7">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          {% for gateway in object_list %}
+              <div class="col-md-4 pad-10-tp">
+                <a href="{% url 'room-detail' gateway.pk %}" class="btn btn-primary room-button" role="button">{{gateway.title}}
+                {% for status_count in gateway.status_wise_tags %}
+                  <br>
+                   <span class="badge">{{status_count.ble_device_id__count}}</span>  {{status_count.environment__temp_status}}
+                {% endfor %}
+                </a>
+              </div>
+          {% empty %}
+            <div style="text-align:center;">No rooms registered yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div style="text-align:center;"> Warning: {{warning_tags_count}} </div>
+        </div>
+        <div class="row">
+          <div style="text-align:center;">{{total_tags}} Tags</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

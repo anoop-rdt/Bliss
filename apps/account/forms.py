@@ -74,6 +74,8 @@ class LoginForm(AbstractFrom):
                 login(request, self.user)
             else:
                 self.add_common_error(self.error)
+        else:
+            return self.error
         return self.user
 
     def _check_confirm_and_login(self):
