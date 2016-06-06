@@ -54,7 +54,7 @@ class BLEDevice(AbstractTimestampModel):
         min_temp_diff = self.current_temp - self.environment.min_temp
         temp_in_danger = self.environment.max_temp <= self.current_temp <= self.environment.min_temp
         humid_in_danger = False
-        max_humid_diff, min_humid_diff = settings.WARNING_MODE_DIFFERENCE + 1
+        max_humid_diff = min_humid_diff = (settings.WARNING_MODE_DIFFERENCE + 1)
         if self.environment.max_humidity and self.current_humidity and self.environment.min_humidity:
             max_humid_diff = self.environment.max_humidity - self.current_humidity
             min_humid_diff = self.current_humidity - self.environment.min_humidity
