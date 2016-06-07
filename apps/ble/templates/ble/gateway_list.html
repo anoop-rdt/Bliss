@@ -6,16 +6,17 @@
 {% block container %}
 <br>
 <div class="row">
-  <div class="col-md-7">
+  <div class="col-md-9">
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
           {% for gateway in object_list %}
               <div class="col-md-4 pad-10-tp">
-                <a href="{% url 'room-detail' gateway.pk %}" class="btn btn-primary room-button" role="button">{{gateway.title}}
+                <a href="{% url 'room-detail' gateway.pk %}" class="btn btn-primary room-button" role="button"><h4>{{gateway.title}}</h4>
                 {% for status_count in gateway.status_wise_tags %}
-                  <br>
+                  <div class="device_list">
                    <span class="badge">{{status_count.ble_device_id__count}}</span>  {{status_count.environment__temp_status}}
+                  </div>
                 {% endfor %}
                 </a>
               </div>
@@ -27,7 +28,7 @@
     </div>
   </div>
 
-  <div class="col-md-5">
+  <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">

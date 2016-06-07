@@ -8,19 +8,19 @@
 <h2>{{object.title}}</h2>
 <br>
 <div class="row">
-  <div class="col-md-7">
+  <div class="col-md-9">
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
           {% for room_env in room_envs %}
-              <div class="col-md-4 pad-10-tp">
+              <div class="col-md-4 device-row">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h1 class="panel-title">{{room_env.temp_status}}</h1>
                     </div>
                     <div class="panel-body">
                       {% for device in room_env.devices.all|in_room:object %}
-                       <div class="col-md-4 pad-10-tp">
+                       <div class="col-md-4 col-xs-6 pad-10-tp">
                         <a href="{% url 'device' device.ble_device_id %}"<button type="button" class="btn btn-{{device.temp_status}} btn-circle btn-xl"><small>{{device.current_temp|floatformat:1}}&#8451</small></button></a>
                        </div>
                       {% endfor %}
@@ -40,7 +40,7 @@
     </div>
   </div>
 
-  <div class="col-md-5">
+  <div class="col-md-3">
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
