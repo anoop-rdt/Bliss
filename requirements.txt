@@ -65,3 +65,5 @@ static==1.0.2
 static3==0.5.1
 Unidecode==0.4.19
 Werkzeug==0.10.4
+django-phonenumber-field==1.1.0 
+twilio==5.4.0

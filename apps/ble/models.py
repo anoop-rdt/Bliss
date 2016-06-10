@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.core.validators import RegexValidator
 
 class AbstractTimestampModel(models.Model):
     created_on = models.DateTimeField(auto_now_add=True, editable=True)
@@ -12,7 +13,9 @@ class AbstractTimestampModel(models.Model):
 class Company(models.Model):
     title = models.CharField(max_length=256)
     description = models.CharField(max_length=2000, null=True, blank=True)
-
+    email_address = models.EmailField()
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_number = models.CharField(validators=[phone_regex],max_length=15, blank=True) # validators should be a list
     def __unicode__(self):
         return str(self.title)
 
