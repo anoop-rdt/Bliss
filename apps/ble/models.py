@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.core.validators import RegexValidator
+from actions import send_notification
 
 class AbstractTimestampModel(models.Model):
     created_on = models.DateTimeField(auto_now_add=True, editable=True)
@@ -47,20 +49,21 @@ class BLEDevice(AbstractTimestampModel):
     gateway = models.ForeignKey(Gateway,related_name='devices')
     current_temp = models.DecimalField(max_digits=8, decimal_places=3,null=True, blank=True)
     current_humidity = models.DecimalField(max_digits=8, decimal_places=3,null=True, blank=True)
+    notified = models.BooleanField(default=False)
     
     def __unicode__(self):
         return str(self.name)
 
     @property
     def temp_status(self):
-        max_temp_diff = self.environment.max_temp - self.current_temp
-        min_temp_diff = self.current_temp - self.environment.min_temp
-        temp_in_danger = self.environment.max_temp <= self.current_temp <= self.environment.min_temp
+        max_temp_diff = abs(float(self.environment.max_temp) - float(self.current_temp))
+        min_temp_diff = abs(float(self.current_temp) - float(self.environment.min_temp))
+        temp_in_danger = self.environment.max_temp <= self.current_temp or self.current_temp <= self.environment.min_temp
         humid_in_danger = False
         max_humid_diff = min_humid_diff = (settings.WARNING_MODE_DIFFERENCE + 1)
         if self.environment.max_humidity and self.current_humidity and self.environment.min_humidity:
-            max_humid_diff = self.environment.max_humidity - self.current_humidity
-            min_humid_diff = self.current_humidity - self.environment.min_humidity
+            max_humid_diff = float(self.environment.max_humidity) - float(self.current_humidity)
+            min_humid_diff = float(self.current_humidity) - float(self.environment.min_humidity)
             humid_in_danger = self.environment.max_humidity <= self.current_humidity <= self.environment.min_humidity
         if temp_in_danger or humid_in_danger:
             return "danger"
@@ -68,6 +71,28 @@ class BLEDevice(AbstractTimestampModel):
             return "warning"
         else:
             return "success"
+
+
+    def save(self, *args, **kwargs):
+        super(BLEDevice, self).save(*args, **kwargs)
+        mail_to = self.gateway.company.email_address
+        sms_to = self.gateway.company.phone_number
+        if not (self.notified) and self.temp_status in ('danger','warning'):
+            sms_message = u'''{}:{} in {}.Current:{}\xb0C '''.format(self.temp_status,self.name,self.gateway,round(self.current_temp,1))
+            email_message = u'''{} in {} reached {}\xb0C '''.format(self.name,self.gateway,round(self.current_temp,1))
+            email_subject = self.temp_status
+            self.notified = True
+            self.save()
+            send_notification(email_message, email_subject, mail_to, sms_message,sms_to)
+        elif self.notified and self.temp_status not in ('danger', 'warning'):
+            email_subject = 'Back to Normal'
+            sms_message = u'''Normal:{} in {}.Current:{}\xb0C '''.format(self.temp_status,self.name,self.gateway,round(self.current_temp,1))
+            email_message = u'''{} in {} back to normal {}\xb0C '''.format(self.name,self.gateway,round(self.current_temp,1))
+            self.notified = False
+            self.save()
+            send_notification(email_message, email_subject, mail_to, sms_message,sms_to)
+
+
 
 class BLEData(AbstractTimestampModel):
     temperature = models.FloatField()
