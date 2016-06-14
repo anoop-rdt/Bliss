@@ -74,7 +74,6 @@ class BLEDevice(AbstractTimestampModel):
 
 
     def save(self, *args, **kwargs):
-        super(BLEDevice, self).save(*args, **kwargs)
         mail_to = self.gateway.company.email_address
         sms_to = self.gateway.company.phone_number
         if not (self.notified) and self.temp_status in ('danger','warning'):
@@ -82,15 +81,15 @@ class BLEDevice(AbstractTimestampModel):
             email_message = u'''{} in {} reached {}\xb0C '''.format(self.name,self.gateway,round(self.current_temp,1))
             email_subject = self.temp_status
             self.notified = True
-            self.save()
             send_notification(email_message, email_subject, mail_to, sms_message,sms_to)
         elif self.notified and self.temp_status not in ('danger', 'warning'):
             email_subject = 'Back to Normal'
-            sms_message = u'''Normal:{} in {}.Current:{}\xb0C '''.format(self.temp_status,self.name,self.gateway,round(self.current_temp,1))
+            sms_message = u'''Normal:{} in {}.Current:{}\xb0C '''.format(self.name,self.gateway,round(self.current_temp,1))
             email_message = u'''{} in {} back to normal {}\xb0C '''.format(self.name,self.gateway,round(self.current_temp,1))
             self.notified = False
-            self.save()
             send_notification(email_message, email_subject, mail_to, sms_message,sms_to)
+        super(BLEDevice, self).save(*args, **kwargs)
+
 
 
 
